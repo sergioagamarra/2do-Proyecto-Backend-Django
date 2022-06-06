@@ -1,0 +1,25 @@
+{% load static %}
+<nav class="navbar">
+    <div class="navbar__search">
+        <img class="logo" src="{% static 'img/logo.png' %}" alt="">
+        <!-- <form action="">
+            <input class="search__form__input" type="text" name="products" id="products">
+            <button class="search__form__button" type="submit"> <i class="fa-solid fa-magnifying-glass"></i></button>
+        </form> -->
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="search__form__button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <a class="login" href=""> <i class="fa-solid fa-circle-user icon_user"></i> Login </a>
+        <a href="#"><i class="fa-solid fa-cart-shopping icon_cart"></i></a>
+    </div>
+    <div class="navbar__links">
+        <ul class="links">
+            <li><a class="link" href="/">Home</a></li>
+            <li><a class="link" href="/">Products</a></li>
+            <li><a class="link" href="/">Help</a></li>
+            <li><a class="link" href="/">About us</a></li>
+        </ul>
+    </div>
+  
+</nav>

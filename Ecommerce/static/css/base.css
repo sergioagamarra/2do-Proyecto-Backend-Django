@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Poppins:wght@200&display=swap');
+
+/***** COLORS *****/
+/* #1E71B1 */
+/* #283044 */
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/******** NAVBAR ********/
+.navbar{
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar__search{
+    display: flex;
+    justify-content: center;
+    background-color:white;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.logo{
+    width: 200px;
+}
+
+.navbar__links{
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #1E71B1;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.search__form__button{
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    color: #1E71B1;
+    border-color: #1E71B1;
+}
+
+.search__form__button:hover{
+    background-color: #1E71B1;
+    color: white;
+}
+
+.login{
+    background-color:#1E71B1;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+}
+
+.login:hover{
+    color: white;
+}
+
+.icon_cart{
+    font-size:x-large;
+    color: #1E71B1;
+}
+
+.icon_user{
+    padding-right: 0.5rem;
+    font-size: large;
+   /*  margin-left: 1rem; */
+}
+
+.links{
+    display: flex;
+    width: 60%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: space-evenly;
+}
+
+.link{
+    text-decoration: none;
+    color: white;
+    margin-right: 1rem;
+}
+
+.link:hover{
+    color: #283044;
+}
+
+/******** FOOTER ********/
+
+.footer{
+    background-color: #1E71B1;
+    padding: 1.5rem;
+}
+
