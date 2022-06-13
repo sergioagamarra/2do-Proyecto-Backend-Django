@@ -5,5 +5,16 @@
 {% block main %}
 
     <h1>Home NAti</h1>
+    <section>
+
+        {% for product in products %}
+            <article>
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.price }}</p>
+                <img src="{{ product.image }}">
+                <a href="/cart/add/{{ product.id }}">Add to cart</a>
+            </article>
+        {% endfor %}
+    </section>
     
 {% endblock %}
