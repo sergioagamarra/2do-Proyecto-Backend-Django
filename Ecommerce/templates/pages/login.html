@@ -1,0 +1,35 @@
+{%  extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block main %}
+    <div class="d-flex flex-column align-items-center m-3">
+        <h3 class="m-3">Log In</h3>
+        <form method="post" action="/auth/login/" style="width: 400px;">
+            {% csrf_token %}
+            <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" required>
+            </div>
+            
+            <button class="btn btn-primary">Iniciar sesión</button>
+        </form>
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+    </div>
+    <!-- <form class="auth-form" method="post" action="/auth/login/">
+        {% csrf_token %}
+        <input class="field" type="email" name="email">
+        <input class="field" type="password" name="password">
+
+        <button class="button">Iniciar sesión</button>
+    </form>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %} -->
+{% endblock %}

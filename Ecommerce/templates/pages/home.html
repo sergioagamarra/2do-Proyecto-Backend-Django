@@ -4,14 +4,26 @@
 
 {% block main %}
 
-    <h1>Home NAti</h1>
-    <section>
+    <section class="container">
+        <div class="row">
+            <img src="https://compragamer.net/categorias_demo/defaultAngular.jpg" alt="">
+        </div>
+
+        <div class="row">
+            <div class="col">
+                
+            </div>
+            <div class=" col">
+
+            </div>
+
+        </div>
 
         {% for product in products %}
             <article>
                 <h2>{{ product.name }}</h2>
                 <p>{{ product.price }}</p>
-                <img src="{{ product.image }}">
+                <img src="{{ product.image }}" width="200">
                 <a href="/cart/add/{{ product.id }}">Add to cart</a>
             </article>
         {% endfor %}

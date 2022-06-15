@@ -1,13 +1,76 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}
+    My cart
+{% endblock %}
+
+
+{% block main %}
     <h1>Carrito</h1>
-</body>
-</html>
+    <section class="cart">
+        {% for cartItem in products %}
+            <article class="cart-item">
+                <h3>{{ cartItem.product.name }}</h3>
+                <input id="amount" type="number" max="{{cartItem.product.stock}}" min="1" value="{{ cartItem.amount }}" onchange="changeAmount(this.value,{{ cartItem.id }})">
+                <img class="cart-item-image" src="{{ cartItem.product.image }}" width="200">
+                <a href="/cart/delete/{{ cartItem.id }}">Eliminar</a>
+            </article>
+        {% endfor %}
+    </section>
+    <p id="total" class="total">Total: {{ total }}</p>
+    <div>
+        <a href="/cart/pay" class="payment_btn">Pagar</a>
+        <div id="paypal-button-container"></div>
+    </div>
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+    <script>
+        const totalp = document.getElementById("total")
+        let totalint = {{ total }}
+        function changeAmount(amount,idItem){
+            // fetch de javascript
+            fetch("/cart/change_amount",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    amount:Number.parseInt(amount),
+                    idItem: idItem
+                })
+            }).then(response=>response.json())
+                .then(data=>{
+                    totalp.innerText = "Total: "+data.total
+                })
+        }
+
+        // paypal
+        paypal.Buttons({
+            // Sets up the transaction when a payment button is clicked
+            createOrder: (data, actions) => {
+            return actions.order.create({
+                purchase_units: [{
+                amount: {
+                    value: totalint // Can also reference a variable or function
+                }
+                }]
+            });
+            },
+            // Finalize the transaction after payer approval
+            onApprove: (data, actions) => {
+            return actions.order.capture().then(function(orderData) {
+                // Successful capture! For dev/demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                const transaction = orderData.purchase_units[0].payments.captures[0];
+                alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                // When ready to go live, remove the alert and show a success message within this page. For example:
+                // const element = document.getElementById('paypal-button-container');
+                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                // Or go to another URL:  actions.redirect('thank_you.html');
+            });
+            }
+        }).render('#paypal-button-container');
+
+    </script>
+
+{% endblock %}

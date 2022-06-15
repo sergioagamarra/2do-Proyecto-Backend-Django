@@ -7,6 +7,7 @@ User = get_user_model()
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+    total = models.FloatField(default=0)
     #products = models.ManyToOneRel(field="CartItem", field_name="id", to="id")
 
 

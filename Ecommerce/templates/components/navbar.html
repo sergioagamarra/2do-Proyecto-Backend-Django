@@ -1,7 +1,7 @@
 {% load static %}
-<nav class="navbar">
+<nav class="navbar p-0">
     <div class="navbar__search">
-        <img class="logo" src="{% static 'img/logo.png' %}" alt="">
+        <a href="/"><img class="logo" src="{% static 'img/logo.png' %}" alt=""></a>
         <!-- <form action="">
             <input class="search__form__input" type="text" name="products" id="products">
             <button class="search__form__button" type="submit"> <i class="fa-solid fa-magnifying-glass"></i></button>
@@ -10,14 +10,32 @@
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="search__form__button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-        <a class="login" href=""> <i class="fa-solid fa-circle-user icon_user"></i> Login </a>
-        <a href="#"><i class="fa-solid fa-cart-shopping icon_cart"></i></a>
+        {% if user.is_authenticated %}
+            <!-- <a class="login" href="/auth/logout"> <i class="fa-solid fa-circle-user icon_user"></i>{{ user.username }}</a> -->
+            <!-- Example single danger button -->
+            <div class="btn-group">
+                <button type="button" class="login btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #1E71B1; color: white;">
+                    <i class="fa-solid fa-circle-user icon_user"></i>{{ user.username }}
+                </button>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/auth/perfil">Mi Perfil</a></li>
+                <li><a class="dropdown-item" href="#">Configuraciones</a></li>
+                <li><a class="dropdown-item" href="#">Ayuda</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/auth/logout">Cerrar Sesion</a></li>
+                </ul>
+            </div>
+            <a href="/cart"><i class="fa-solid fa-cart-shopping icon_cart"></i>Carrito ({{ user.cart.products.all.count }})</a>
+        {% else %}
+            <a class="login" href="/auth/login"> <i class="fa-solid fa-circle-user icon_user"></i>Login </a>
+            <a class="login" href="/auth/signup"> <i class="fa-solid fa-circle-user icon_user"></i>Sign up</a>
+        {% endif %}
     </div>
     <div class="navbar__links">
         <ul class="links">
             <li><a class="link" href="/">Home</a></li>
             <li><a class="link" href="/">Products</a></li>
-            <li><a class="link" href="/">Help</a></li>
+            <li><a class="link" href="/">ayuda</a></li>
             <li><a class="link" href="/">About us</a></li>
         </ul>
     </div>
