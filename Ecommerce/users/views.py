@@ -110,7 +110,7 @@ def perfil_view(request):
     })
 
 def edit_view(request):
-    user=request.user
+    user = request.user
     if request.method == "POST":
         user.first_name = request.POST['first_name']
         user.last_name = request.POST['last_name']
@@ -123,6 +123,8 @@ def edit_view(request):
         user.zipcode = request.POST['zipcode']
         
         user.save()
+        
+    return redirect("/")
 
 def validate_email(request, email_uuid):
     try:

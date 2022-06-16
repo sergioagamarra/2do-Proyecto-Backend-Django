@@ -10,23 +10,78 @@
         </div>
 
         <div class="row">
-            <div class="col">
-                
+            <div class="col-3">
+                <div class="card">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        <i class="fa-solid fa-border-all"></i>  Categorias
+                    </a>
+                    {% for category in categories %}
+                        <a href="#" class="list-group-item list-group-item-action">{{ category.name}} <i class="fa-solid fa-chevron-right"></i></a>
+                    {% endfor %}
+                </div>
             </div>
             <div class=" col">
+                <div class="row">
+                    <div>
+                        <a href="/price/1"><i class="fa-solid fa-arrow-down-long"></i></a>
+                        <a href="/price/0"><i class="fa-solid fa-arrow-up-long"></i></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <article style="background-color: #eee;">
+                        <div class="container py-5">
+                            <div class="row row-cols-2">
+                                {% for product in products %}
+                                    <div class="col-md-12 col-lg-4 mb-4 mb-lg-0"> 
+                                        <div class="card">
+                                            <div class="d-flex justify-content-between p-3 pb-0">
+                                                <p class="lead mb-0"></p>
+                                                {% if product.stock %}
+                                                    <div
+                                                        class="bg-info rounded d-flex align-items-center justify-content-center shadow-1-strong"
+                                                        style="width: 60px; height: 35px;">
+                                                        <p class="text-white mb-0 small">stock {{product.stock}}</p>
+                                                    </div>
 
+                                                {% else %}
+                                                    <div
+                                                        class="bg-danger rounded d-flex align-items-center justify-content-center shadow-1-strong"
+                                                        style="width: 60px; height: 35px;">
+                                                        <p class="text-white mb-0 small">stock {{product.stock}}</p>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <img src="{{ product.image }}"
+                                            class="card-img-top" alt="product"/>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <h5 class="mb-0">{{ product.name }}</h5>
+                                                </div>
+                                    
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <h5 class="text-success mb-0">$ {{ product.price }}</h5>
+                                                    {% if product.stock %}
+                                                        <a class="login" href="/cart/add/{{ product.id }}"> <i class="fa-solid fa-cart-shopping"></i> Add to cart</a> 
+                                                    {% else %}
+                                                        <button type="button" class="login" disabled><i class="fa-solid fa-cart-shopping"></i> Add to cart</button>
+                                                        <!-- <a class="login disabled" href="#" role="button" aria-disabled="true"> <i class="fa-solid fa-cart-shopping"></i> Add to cart</a>  -->
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                        </div>
+                        
+                    </article> 
+                </div>
+                
+                    
             </div>
 
         </div>
-
-        {% for product in products %}
-            <article>
-                <h2>{{ product.name }}</h2>
-                <p>{{ product.price }}</p>
-                <img src="{{ product.image }}" width="200">
-                <a href="/cart/add/{{ product.id }}">Add to cart</a>
-            </article>
-        {% endfor %}
     </section>
     
 {% endblock %}

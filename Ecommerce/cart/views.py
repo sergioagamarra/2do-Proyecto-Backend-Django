@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import CartItem, Cart
+from .models import Product
 from products.models import Product
 from django.utils.decorators import decorator_from_middleware
 from users.middleware import AuthMiddleware
@@ -38,18 +39,36 @@ def get_cart(request):
 
 def add_to_cart(request, idProduct):
     if request.user.is_authenticated:
-        cartItem = CartItem()
-        cartItem.product = Product.objects.get(pk=idProduct)
-        cartItem.amount = 1
-        cartItem.cart = request.user.cart
-        cartItem.save()
+        
+        products = request.user.cart.products.all()
+        if products.first() is None:
+            newCartItem = CartItem()
+            newCartItem.product = Product.objects.get(pk=idProduct)
+            newCartItem.amount = 1
+            newCartItem.cart = request.user.cart
+            newCartItem.save()
+        else: 
+            exist = False
+            for cartItem in products:        
+                if cartItem.product.id == idProduct:
+                    exist = True
+                    aux = cartItem
+            if exist:   
+                aux.amount += 1
+                aux.save()
+            else:
+                newCartItem = CartItem()
+                newCartItem.product = Product.objects.get(pk=idProduct)
+                newCartItem.amount = 1
+                newCartItem.cart = request.user.cart
+                newCartItem.save()
 
-         #actualizar el total
+
+        #actualizar el total
         products = request.user.cart.products.all()
         total = 0
         for cartItem in products:
             total += cartItem.product.price * cartItem.amount
-
         cart = request.user.cart
         cart.total=total
         cart.save()
@@ -99,35 +118,48 @@ def delete_from_cart(request, id_cart_item):
 def create_paypal_order(request):
     products = request.user.cart.products.all()
     total = 0
+
+    band = True
     for cartItem in products:
+        print(cartItem.amount)
+        print(cartItem.product.stock)
+        if cartItem.amount > cartItem.product.stock:
+            band = False
         total += cartItem.product.price * cartItem.amount
-
-    access_token = get_access_token()
-    create_order_url = paypal_url+"/v2/checkout/orders"
-    response = requests.post(create_order_url, headers={
-        "Authorization": "Bearer " + access_token,
-        "Content-Type": "application/json",
-    }, data=json.dumps({
-        "intent": "CAPTURE",
-        "purchase_units": [
-            {
-                "amount": {
-                    "currency_code": "USD",
-                    "value": total
+    
+    if band:
+        
+        access_token = get_access_token()
+        create_order_url = paypal_url+"/v2/checkout/orders"
+        response = requests.post(create_order_url, headers={
+            "Authorization": "Bearer " + access_token,
+            "Content-Type": "application/json",
+        }, data=json.dumps({
+            "intent": "CAPTURE",
+            "purchase_units": [
+                {
+                    "amount": {
+                        "currency_code": "USD",
+                        "value": total
+                    }
                 }
-            }
-        ]
-    }))
+            ]
+        }))
 
-    data = response.json()
+        data = response.json()
 
+        return JsonResponse({
+            "order": data
+        })
     return JsonResponse({
-        "order": data
-    })
+            "message": "No hay stock"
+        })
+
 
 
 @csrf_exempt
 def capture_paypal_order(request, order_id):
+   
     access_token = get_access_token()
     capture_order_url = paypal_url+"/v2/checkout/orders/"+order_id+"/capture"
     response = requests.post(capture_order_url, headers={
@@ -137,12 +169,18 @@ def capture_paypal_order(request, order_id):
 
     data = response.json()
     print(data)
+    products = request.user.cart.products.all()
+    for cartItem in products:
+        product = Product.objects.filter(id=cartItem.product.id).first()
+        product.stock = product.stock - cartItem.amount
+        product.save()
     cart_items = request.user.cart.delete()
     new_cart = Cart()
     new_cart.user = request.user
     new_cart.save()
 
     return JsonResponse(data)
+    #return redirect("/cart")
 
 
 def get_access_token():

@@ -11,7 +11,7 @@
         {% for cartItem in products %}
             <article class="cart-item">
                 <h3>{{ cartItem.product.name }}</h3>
-                <input id="amount" type="number" max="{{cartItem.product.stock}}" min="1" value="{{ cartItem.amount }}" onchange="changeAmount(this.value,{{ cartItem.id }})">
+                <input id="amount" type="number" max="10" min="1" value="{{ cartItem.amount }}" onchange="changeAmount(this.value,{{ cartItem.id }})">
                 <img class="cart-item-image" src="{{ cartItem.product.image }}" width="200">
                 <a href="/cart/delete/{{ cartItem.id }}">Eliminar</a>
             </article>

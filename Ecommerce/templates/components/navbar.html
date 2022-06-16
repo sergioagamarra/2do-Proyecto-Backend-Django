@@ -6,8 +6,9 @@
             <input class="search__form__input" type="text" name="products" id="products">
             <button class="search__form__button" type="submit"> <i class="fa-solid fa-magnifying-glass"></i></button>
         </form> -->
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="d-flex" role="search" action="/search" method="post">
+            {% csrf_token %}
+            <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="search__form__button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
         {% if user.is_authenticated %}
@@ -25,7 +26,13 @@
                 <li><a class="dropdown-item" href="/auth/logout">Cerrar Sesion</a></li>
                 </ul>
             </div>
-            <a href="/cart"><i class="fa-solid fa-cart-shopping icon_cart"></i>Carrito ({{ user.cart.products.all.count }})</a>
+            <a href="/cart" style="text-decoration: none">
+                <i class="fa-solid fa-cart-shopping icon_cart" style="position: absolute;"></i>
+                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center shadow-1-strong"
+                    style="width: 20px; height: 20px; position: relative; left: 15px; bottom: 14px;">
+                    <p class="text-white text-sm mb-0 small">{{ user.cart.products.all.count }}</p>
+                </div>
+            </a>
         {% else %}
             <a class="login" href="/auth/login"> <i class="fa-solid fa-circle-user icon_user"></i>Login </a>
             <a class="login" href="/auth/signup"> <i class="fa-solid fa-circle-user icon_user"></i>Sign up</a>
