@@ -22,7 +22,7 @@ print(auth_middleware)
 
 @auth_middleware
 def get_cart(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.isEmailValid:
         products = request.user.cart.products.all()
         total = request.user.cart.total
         # for cartItem in products:
@@ -34,7 +34,10 @@ def get_cart(request):
             "client_token": generate_client_token()
         })
 
-    return redirect("/")
+    return render(request, "pages/email_validation.html", {
+            "message": "Email validated successfully",
+            "validate": False
+        })
 
 
 def add_to_cart(request, idProduct):

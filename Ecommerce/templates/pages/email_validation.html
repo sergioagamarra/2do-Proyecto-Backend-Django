@@ -3,6 +3,27 @@
 {% block title %}Email validation{% endblock %}
 
 {% block main %}
-    <p>{{ message }}</p>
-{% endblock %}
+    {% if validate %}
+        {% if type %}
+            <div class="container-sm my-5">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa-solid fa-circle-check mx-2"></i> {{ message }} <a href="/" class="alert-link btn btn-success btn-block text-white mx-4 "><i class="fa-solid fa-xmark"></i></a>
+                </div>
+            </div>
 
+        {% else %}
+            <div class="container-sm my-5">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation mx-2"></i> {{ message }} <a href="/" class="alert-link btn btn-danger btn-block text-white mx-4 "><i class="fa-solid fa-xmark"></i></a>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="container my-3">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Ups!</strong> Your email has not been verified and please check your inbox.
+                <a href="/" class="alert-link btn btn-warning btn-block text-white mx-4"><i class="fa-solid fa-xmark"></i></a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

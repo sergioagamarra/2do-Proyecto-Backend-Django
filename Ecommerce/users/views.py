@@ -81,14 +81,6 @@ def signup_view(request):
                     fail_silently=False,
                 ) 
                 
-                ''' message = EmailMultiAlternatives('Verificación de correo', #Titulo
-                                    'Por favor verifica tu correo electrónico: http://localhost:8000/auth/verify/' + email_uuid,
-                                    settings.EMAIL_HOST_USER, #Remitente
-                                    [email]) #Destinatario
-
-                #message.attach_alternative(content, 'text/html')
-                message.send() '''
-                
             except:
                 print("Ocurrio un error al enviar")
 
@@ -134,10 +126,14 @@ def validate_email(request, email_uuid):
         user.save()
 
         return render(request, "pages/email_validation.html", {
-            "message": "Email validated successfully"
+            "message": "Email validated successfully",
+            "type": True,
+            "validate": True
         })
 
     except ObjectDoesNotExist:
         return render(request, "pages/email_validation.html", {
-            "message": "Maybe this validation code has been used. Verify your url"
+            "message": "Maybe this validation code has been used. Verify your url",
+            "type": False,
+            "validate": True
         })
