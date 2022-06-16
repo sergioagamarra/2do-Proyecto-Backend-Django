@@ -109,7 +109,7 @@ def delete_from_cart(request, id_cart_item):
         cart_item = CartItem.objects.get(pk=id_cart_item)
         if cart_item.cart.user == request.user:
             cart_item.delete()
-
+            total = calculate_total(request.user.cart)
             return redirect("/cart")
 
     return redirect("/")
@@ -207,3 +207,15 @@ def generate_client_token():
     data = response.json()
 
     return data['client_token']
+
+def calculate_total(cart):
+    products = cart.products.all()
+    total = 0
+    for cartItem in products:
+        total += cartItem.product.price * cartItem.amount
+
+    updateCart = cart
+    updateCart.total = total
+    updateCart.save()
+    return total
+    

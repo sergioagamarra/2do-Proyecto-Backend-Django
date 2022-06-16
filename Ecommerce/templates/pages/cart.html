@@ -6,22 +6,76 @@
 
 
 {% block main %}
-    <h1>Carrito</h1>
-    <section class="cart">
-        {% for cartItem in products %}
-            <article class="cart-item">
-                <h3>{{ cartItem.product.name }}</h3>
-                <input id="amount" type="number" max="10" min="1" value="{{ cartItem.amount }}" onchange="changeAmount(this.value,{{ cartItem.id }})">
-                <img class="cart-item-image" src="{{ cartItem.product.image }}" width="200">
-                <a href="/cart/delete/{{ cartItem.id }}">Eliminar</a>
-            </article>
-        {% endfor %}
+    <section class="container my-4">
+        <div class="row">
+            <section class="h-100" style="background-color: #eee;">
+                <div class="container h-100 py-5">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-10">
+            
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
+                        </div>
+                        {% for cartItem in products %}
+                            <div class="card rounded-3 mb-4">
+                                <div class="card-body p-4">
+                                <div class="row d-flex justify-content-between align-items-center">
+                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                        <img
+                                        src="{{ cartItem.product.image }}"
+                                        class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                        <p class="lead fw-normal mb-2">{{ cartItem.product.name }}</p>
+                                        <!-- <p><span class="text-muted">Size: </span>M <span class="text-muted">Color: </span>Grey</p> -->
+                                    </div>
+                                    <div class="col-1">
+                                        <input id="amount" class="form-control form-control-sm" type="number" max="{{cartItem.product.stock}}" 
+                                        min="1" value="{{ cartItem.amount }}" onchange="changeAmount(this.value,{{ cartItem.id }})">
+                                    </div>
+                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                        <h5 class="mb-0">${{ cartItem.product.price }}</h5>
+                                    </div>
+                                    <div class="col-1">
+                                        <a href="/cart/delete/{{ cartItem.id }}" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between p-2 mb-2" style="background-color: #e1f5fe;">
+                                    <h5 class="fw-bold mb-0">Total:</h5>
+                                    <h5 id="total" class="fw-bold mb-0">${{ total }}</h5>
+                                </div>
+                                <!-- <p id="total" class="total">Total: {{ total }}</p> -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- <button type="button" class="btn btn-warning btn-block btn-lg">Proceed to Pay</button> -->
+                                <p>
+                                    <button class="btn btn-warning btn-block btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                        Proceed to Pay
+                                    </button>
+                                </p>
+                                <div class="collapse mx-5" id="collapseExample">
+                                    <div class="card card-body mx-5">
+                                        <div id="paypal-button-container"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                    </div>
+                </div>
+                </div>
+            </section>
+        </div>
     </section>
-    <p id="total" class="total">Total: {{ total }}</p>
-    <div class="payment-section">
-        <a href="/cart/pay" class="payment_btn">Pagar</a>
-        <div id="paypal-button-container"></div>
-    </div>
     
     <script src="https://www.paypal.com/sdk/js?client-id={{ client_id }}&currency=USD"
         data-client-id="{{ client_token }}"
@@ -45,7 +99,7 @@
             }).then(response=>response.json())
                 .then(data=>{
                     total = data.total
-                    totalParagraph.innerText = "Total: "+data.total
+                    totalParagraph.innerText = "$" + data.total.toFixed(2)
                 })
         }
 

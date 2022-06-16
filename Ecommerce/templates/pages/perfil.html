@@ -7,12 +7,24 @@
 {% block main %}
 
     <div class="d-flex flex-column align-items-center m-3" >
-        <h3 class="m-3">Perfil</h3>
+        <h3 class="mx-3">Profile</h3>
+        <hr style="width: 80%;">
         <form method="post" action="/auth/edit/" style="width: 80%;">
             {% csrf_token %}
             <div class="row">
                 <div class="col-3">
-                    <h5>Informacion</h5>
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                class="rounded-circle img-fluid" style="width: 150px;">
+                            <h5 class="my-3">{{user.username}}</h5>
+                            <p class="text-muted mb-1">{{user.first_name}}</p>
+                            <p class="text-muted mb-4">{{user.last_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <h5>Information</h5>
 
                     <div class="mb-2">
                         <label for="exampleInputEmail1" class="form-label">First name</label>
@@ -32,7 +44,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <h5>Domicilio</h5>
+                    <h5>Direction</h5>
                     <div class="mb-2">
                         <label for="exampleInputEmail1" class="form-label">Country</label>
                         <input type="text" class="form-control" name="country" value="{{user.country}}">
@@ -49,16 +61,24 @@
                         <label for="exampleInputEmail1" class="form-label">District</label>
                         <input type="text" class="form-control" name="district" value="{{user.district}}">
                     </div>
-                    <div class="mb-2">
-                        <label for="exampleInputEmail1" class="form-label">Zipcode</label>
-                        <input type="text" class="form-control" name="zipcode" value="{{user.zipcode}}">
-                    </div>
+                    {% if user.zipcode %}
+                        <div class="mb-2" style="width: 100px;">
+                            <label for="exampleInputEmail1" class="form-label">Zipcode</label>
+                            <input type="number" class="form-control" name="zipcode" value="{{user.zipcode}}">
+                        </div>
+                    {% else %}
+                        <div class="mb-2" style="width: 100px;">
+                            <label for="exampleInputEmail1" class="form-label">Zipcode</label>
+                            <input type="number" class="form-control" name="zipcode" value="">
+                        </div>
+                    {% endif %}
+                   
                 </div>
             </div>
             
             <div class="row-3">
                 
-                <button class="btn btn-primary">Actualizar</button>
+                <button class="btn btn-warning btn-block btn-lg">Update</button>
             </div>
     
         </form>
