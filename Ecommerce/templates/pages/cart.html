@@ -18,15 +18,19 @@
         {% endfor %}
     </section>
     <p id="total" class="total">Total: {{ total }}</p>
-    <div>
+    <div class="payment-section">
         <a href="/cart/pay" class="payment_btn">Pagar</a>
         <div id="paypal-button-container"></div>
     </div>
     
-    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ client_id }}&currency=USD"
+        data-client-id="{{ client_token }}"
+    ></script>
     <script>
-        const totalp = document.getElementById("total")
-        let totalint = {{ total }}
+        const totalParagraph = document.getElementById("total")
+
+        let total = {{ total }}
+
         function changeAmount(amount,idItem){
             // fetch de javascript
             fetch("/cart/change_amount",{
@@ -40,36 +44,38 @@
                 })
             }).then(response=>response.json())
                 .then(data=>{
-                    totalp.innerText = "Total: "+data.total
+                    total = data.total
+                    totalParagraph.innerText = "Total: "+data.total
                 })
         }
 
-        // paypal
         paypal.Buttons({
             // Sets up the transaction when a payment button is clicked
             createOrder: (data, actions) => {
-            return actions.order.create({
-                purchase_units: [{
-                amount: {
-                    value: totalint // Can also reference a variable or function
-                }
-                }]
-            });
+                return fetch("/cart/create_paypal_order",{
+                    method:"POST"
+                })
+                .then((response) => response.json())
+                .then((data) => data.order.id);
             },
             // Finalize the transaction after payer approval
             onApprove: (data, actions) => {
-            return actions.order.capture().then(function(orderData) {
-                // Successful capture! For dev/demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                const transaction = orderData.purchase_units[0].payments.captures[0];
-                alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
-                // When ready to go live, remove the alert and show a success message within this page. For example:
-                // const element = document.getElementById('paypal-button-container');
-                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                // Or go to another URL:  actions.redirect('thank_you.html');
-            });
+              return fetch(`/cart/capture_paypal_order/${data.orderID}`, {
+                method: "post",
+              })
+                .then((response) => response.json())
+                .then((orderData) => {
+                  // Successful capture! For dev/demo purposes:
+                  var transaction = orderData.purchase_units[0].payments.captures[0];
+                  alert(`Transaction ${transaction.status}: ${transaction.id}
+                    See console for all available details
+                  `);
+                  if(transaction.status!=="DECLINED"){
+                      window.location.href="/"
+                  }
+                });
             }
-        }).render('#paypal-button-container');
+          }).render('#paypal-button-container');
 
     </script>
 

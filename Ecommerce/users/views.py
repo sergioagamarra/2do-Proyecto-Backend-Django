@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.conf import settings
 from cart.models import Cart
 import uuid
 
@@ -75,10 +76,19 @@ def signup_view(request):
                 send_mail(
                     'Verificación de correo',
                     'Por favor verifica tu correo electrónico: http://localhost:8000/auth/verify/' + email_uuid,
-                    'mail@tzuzulcode.com',
+                    'sergioagamarra@gmail.com',
                     [email],
                     fail_silently=False,
-                )
+                ) 
+                
+                ''' message = EmailMultiAlternatives('Verificación de correo', #Titulo
+                                    'Por favor verifica tu correo electrónico: http://localhost:8000/auth/verify/' + email_uuid,
+                                    settings.EMAIL_HOST_USER, #Remitente
+                                    [email]) #Destinatario
+
+                #message.attach_alternative(content, 'text/html')
+                message.send() '''
+                
             except:
                 print("Ocurrio un error al enviar")
 
